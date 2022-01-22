@@ -48,9 +48,9 @@ export default function Home(props) {
         ))}
       </Carousel>
       <Typography variant="h2">Popular Products</Typography>
-      <Grid container spacing={3}>
+      <Grid container spacing={10}>
         {topRatedProducts.map((product) => (
-          <Grid item md={4} key={product.name}>
+          <Grid item md={2} key={product.name}>
             <ProductItem
               product={product}
               addToCartHandler={addToCartHandler}
@@ -75,7 +75,7 @@ export async function getServerSideProps() {
     .sort({
       rating: -1,
     })
-    .limit(6);
+    .limit(10 );
   await db.disconnect();
   return {
     props: {
