@@ -1,0 +1,5 @@
+MONGODB_URI=mongodb+srv://robinchacko246:5448lord*L@cluster0.t87wf.mongodb.net/Ecommerce?retryWrites=true&w=majority
+JWT_SECRET=5448lord
+CLOUDINARY_CLOUD_NAME=djl4pepq7
+CLOUDINARY_API_KEY=774156684153735
+CLOUDINARY_API_SECRET=eLE2AyS2SWetu3JzfYELdq0ffoo
