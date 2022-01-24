@@ -144,7 +144,7 @@ export default function Layout({ title, description, children }) {
               </IconButton>
               <NextLink href="/" passHref>
                 <Link>
-                  <Typography className={classes.brand}>amazona</Typography>
+                  <Typography className={classes.brand}>CourseHub</Typography>
                 </Link>
               </NextLink>
             </Box>
@@ -193,7 +193,7 @@ export default function Layout({ title, description, children }) {
                 <InputBase
                   name="query"
                   className={classes.searchInput}
-                  placeholder="Search products"
+                  placeholder="Search Courses"
                   onChange={queryChangeHandler}
                 />
                 <IconButton

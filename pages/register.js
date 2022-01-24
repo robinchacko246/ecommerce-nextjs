@@ -3,8 +3,11 @@ import {
   ListItem,
   Typography,
   TextField,
+  Select,
   Button,
   Link,
+  Box,FormControl,InputLabel,  
+  MenuItem
 } from '@material-ui/core';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -36,7 +39,8 @@ export default function Register() {
   }, []);
 
   const classes = useStyles();
-  const submitHandler = async ({ name, email, password, confirmPassword }) => {
+  const submitHandler = async ({ name, role,email, password, confirmPassword }) => {
+    
     closeSnackbar();
     if (password !== confirmPassword) {
       enqueueSnackbar("Passwords don't match", { variant: 'error' });
@@ -44,9 +48,9 @@ export default function Register() {
     }
     try {
       const { data } = await axios.post('/api/users/register', {
-        name,
+        name, 
         email,
-        password,
+        password,role
       });
       dispatch({ type: 'USER_LOGIN', payload: data });
       Cookies.set('userInfo', data);
@@ -91,6 +95,46 @@ export default function Register() {
               )}
             ></Controller>
           </ListItem>
+
+          <ListItem>
+            <Controller
+              name="role"
+              control={control}
+              defaultValue=""
+              rules={{
+                required: true,
+                minLength: 2,
+              }}
+              render={({ field }) => (
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  id="role"
+                  select
+                  label="role"
+                  inputProps={{ type: 'role' }}
+                  error={Boolean(errors.role)}
+                  helperText={
+                    errors.role
+                      ? errors.role.type === 'minLength'
+                        ? 'role length is more than 1'
+                        : 'role   is required'
+                      : ''
+                  }
+                  {...field}
+
+                >
+                  <MenuItem value={"student"}>Student</MenuItem>
+                  <MenuItem value={"institution"}>Institution</MenuItem>
+
+                </TextField>
+              )}
+            ></Controller>
+          </ListItem>
+
+          
+
+
           <ListItem>
             <Controller
               name="email"

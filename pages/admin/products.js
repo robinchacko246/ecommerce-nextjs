@@ -145,12 +145,17 @@ function AdminProdcuts() {
               </NextLink>
               <NextLink href="/admin/products" passHref>
                 <ListItem selected button component="a">
-                  <ListItemText primary="Products"></ListItemText>
+                  <ListItemText primary="Courses"></ListItemText>
                 </ListItem>
               </NextLink>
               <NextLink href="/admin/users" passHref>
                 <ListItem button component="a">
-                  <ListItemText primary="Users"></ListItemText>
+                  <ListItemText primary="All Users"></ListItemText>
+                </ListItem>
+              </NextLink>
+              <NextLink href="/admin/institutions" passHref>
+                <ListItem button component="a">
+                  <ListItemText primary="Institutions"></ListItemText>
                 </ListItem>
               </NextLink>
             </List>
@@ -163,7 +168,7 @@ function AdminProdcuts() {
                 <Grid container alignItems="center">
                   <Grid item xs={6}>
                     <Typography component="h1" variant="h1">
-                      Products
+                      Courses
                     </Typography>
                     {loadingDelete && <CircularProgress />}
                   </Grid>

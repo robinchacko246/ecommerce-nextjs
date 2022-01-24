@@ -161,7 +161,7 @@ export default function ProductScreen(props) {
                   color="primary"
                   onClick={addToCartHandler}
                 >
-                  Add to cart
+                  Enroll Course
                 </Button>
               </ListItem>
             </List>

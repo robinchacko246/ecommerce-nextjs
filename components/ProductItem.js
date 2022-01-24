@@ -34,7 +34,7 @@ export default function ProductItem({ product, addToCartHandler }) {
           color="primary"
           onClick={() => addToCartHandler(product)}
         >
-          Add to cart
+          Enroll Course
         </Button>
       </CardActions>
     </Card>

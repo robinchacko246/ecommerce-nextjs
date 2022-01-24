@@ -165,7 +165,7 @@ function ProductEdit({ params }) {
   const [isFeatured, setIsFeatured] = useState(false);
 
   return (
-    <Layout title={`Edit Product ${productId}`}>
+    <Layout title={`Edit Course ${productId}`}>
       <Grid container spacing={1}>
         <Grid item md={3} xs={12}>
           <Card className={classes.section}>
@@ -182,7 +182,7 @@ function ProductEdit({ params }) {
               </NextLink>
               <NextLink href="/admin/products" passHref>
                 <ListItem selected button component="a">
-                  <ListItemText primary="Products"></ListItemText>
+                  <ListItemText primary="Courses"></ListItemText>
                 </ListItem>
               </NextLink>
               <NextLink href="/admin/users" passHref>
@@ -198,7 +198,7 @@ function ProductEdit({ params }) {
             <List>
               <ListItem>
                 <Typography component="h1" variant="h1">
-                  Edit Product {productId}
+                  Edit Course {productId}
                 </Typography>
               </ListItem>
               <ListItem>
@@ -226,7 +226,7 @@ function ProductEdit({ params }) {
                             variant="outlined"
                             fullWidth
                             id="name"
-                            label="Name"
+                            label="Course Name"
                             error={Boolean(errors.name)}
                             helperText={errors.name ? 'Name is required' : ''}
                             {...field}
@@ -247,7 +247,7 @@ function ProductEdit({ params }) {
                             variant="outlined"
                             fullWidth
                             id="slug"
-                            label="Slug"
+                            label="Course Slug"
                             error={Boolean(errors.slug)}
                             helperText={errors.slug ? 'Slug is required' : ''}
                             {...field}
@@ -386,7 +386,7 @@ function ProductEdit({ params }) {
                             variant="outlined"
                             fullWidth
                             id="brand"
-                            label="Brand"
+                            label="Course Title"
                             error={Boolean(errors.brand)}
                             helperText={errors.brand ? 'Brand is required' : ''}
                             {...field}
@@ -407,7 +407,7 @@ function ProductEdit({ params }) {
                             variant="outlined"
                             fullWidth
                             id="countInStock"
-                            label="Count in stock"
+                            label="No of Students Allowed"
                             error={Boolean(errors.countInStock)}
                             helperText={
                               errors.countInStock

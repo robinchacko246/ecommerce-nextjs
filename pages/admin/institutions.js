@@ -67,7 +67,8 @@ function AdminUsers() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`/api/admin/users`, {
+
+        const { data } = await axios.get(`/api/admin/institutes`, {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
@@ -139,7 +140,7 @@ function AdminUsers() {
             <List>
               <ListItem>
                 <Typography component="h1" variant="h1">
-                  Users
+                Institutions
                 </Typography>
                 {loadingDelete && <CircularProgress />}
               </ListItem>

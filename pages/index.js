@@ -47,7 +47,7 @@ export default function Home(props) {
           </NextLink>
         ))}
       </Carousel>
-      <Typography variant="h2">Popular Products</Typography>
+      <Typography variant="h2">All Courses</Typography>
       <Grid container spacing={10}>
         {topRatedProducts.map((product) => (
           <Grid item md={2} key={product.name}>

@@ -131,7 +131,7 @@ function UserEdit({ params }) {
               </NextLink>
               <NextLink href="/admin/products" passHref>
                 <ListItem button component="a">
-                  <ListItemText primary="Products"></ListItemText>
+                  <ListItemText primary="Courses"></ListItemText>
                 </ListItem>
               </NextLink>
               <NextLink href="/admin/users" passHref>
