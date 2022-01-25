@@ -1,5 +1,5 @@
 import nc from 'next-connect';
-import Enrollments from '../../../../models/Enrollments';
+import Enrollments from '../../../../models/enrollment';
 import db from '../../../../utils/db';
 
 const handler = nc();
