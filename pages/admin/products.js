@@ -132,9 +132,9 @@ function AdminProdcuts() {
       <Grid container spacing={1}>
         <Grid item md={3} xs={12}>
           <Card className={classes.section}>
-            <List>
+          <List>
               <NextLink href="/admin/dashboard" passHref>
-                <ListItem button component="a">
+                <ListItem  button component="a">
                   <ListItemText primary="Admin Dashboard"></ListItemText>
                 </ListItem>
               </NextLink>
@@ -156,6 +156,11 @@ function AdminProdcuts() {
               <NextLink href="/admin/institutions" passHref>
                 <ListItem button component="a">
                   <ListItemText primary="Institutions"></ListItemText>
+                </ListItem>
+              </NextLink>
+              <NextLink href="/admin/alllectures" passHref>
+                <ListItem button component="a">
+                  <ListItemText primary="All Lectures"></ListItemText>
                 </ListItem>
               </NextLink>
             </List>

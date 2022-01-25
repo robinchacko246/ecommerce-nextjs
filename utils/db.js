@@ -37,9 +37,26 @@ async function disconnect() {
 }
 
 function convertDocToObj(doc) {
-  doc._id = doc._id.toString();
-  doc.createdAt = doc.createdAt.toString();
-  doc.updatedAt = doc.updatedAt.toString();
+ 
+  if(!doc.length)
+  {
+    doc._id =doc._id? doc._id.toString():"22";
+    doc.instructor = doc.instructor?doc.instructor.toString():"";
+    doc.course = doc.course?doc.course.toString():"";
+    doc.createdAt = doc.createdAt?doc.createdAt.toString():"";
+    doc.updatedAt = doc.updatedAt?doc.updatedAt.toString():"";
+  }
+  else
+  {
+    doc.map(x=>{
+      x._id =x._id? x._id.toString():"22";
+      x.instructor = x.instructor?x.instructor.toString():"";
+      x.course = x.course?x.course.toString():"";
+    x.createdAt = x.createdAt?x.createdAt.toString():"";
+    x.updatedAt = x.updatedAt?x.updatedAt.toString():"";
+    return x;
+    })
+  }
   return doc;
 }
 

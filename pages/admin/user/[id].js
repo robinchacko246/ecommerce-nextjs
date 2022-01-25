@@ -118,7 +118,7 @@ function UserEdit({ params }) {
       <Grid container spacing={1}>
         <Grid item md={3} xs={12}>
           <Card className={classes.section}>
-            <List>
+          <List>
               <NextLink href="/admin/dashboard" passHref>
                 <ListItem button component="a">
                   <ListItemText primary="Admin Dashboard"></ListItemText>
@@ -136,7 +136,17 @@ function UserEdit({ params }) {
               </NextLink>
               <NextLink href="/admin/users" passHref>
                 <ListItem selected button component="a">
-                  <ListItemText primary="Users"></ListItemText>
+                  <ListItemText primary="All Users"></ListItemText>
+                </ListItem>
+              </NextLink>
+              <NextLink href="/admin/institutions" passHref>
+                <ListItem button component="a">
+                  <ListItemText primary="Institutions"></ListItemText>
+                </ListItem>
+              </NextLink>
+              <NextLink href="/admin/alllectures" passHref>
+                <ListItem button component="a">
+                  <ListItemText primary="All Lectures"></ListItemText>
                 </ListItem>
               </NextLink>
             </List>

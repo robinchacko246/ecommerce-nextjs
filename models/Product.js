@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-
+const Schema = mongoose.Schema;
 const reviewSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
@@ -27,6 +27,8 @@ const productSchema = new mongoose.Schema(
     reviews: [reviewSchema],
     featuredImage: { type: String },
     isFeatured: { type: Boolean, required: true, default: false },
+    instructor: { type: Schema.Types.ObjectId, ref: "User" },
+    //category: { type: Schema.Types.String, ref: "Category" }
   },
   {
     timestamps: true,

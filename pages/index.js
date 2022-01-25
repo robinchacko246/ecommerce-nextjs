@@ -76,6 +76,8 @@ export async function getServerSideProps() {
       rating: -1,
     })
     .limit(10 );
+
+    console.log(topRatedProductsDocs);
   await db.disconnect();
   return {
     props: {

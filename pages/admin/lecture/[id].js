@@ -13,8 +13,8 @@ import {
   ListItemText,
   TextField,
   CircularProgress,
-  FormControlLabel,
-  Checkbox,MenuItem
+  
+   MenuItem
 } from '@material-ui/core';
 import { getError } from '../../../utils/error';
 import { Store } from '../../../utils/Store';
@@ -54,7 +54,7 @@ function reducer(state, action) {
 }
 
 function ProductEdit({ params }) {
-  const productId = params.id;
+  const lectureId = params.id;
   const { state } = useContext(Store);
   const [{ loading, error, loadingUpdate, loadingUpload }, dispatch] =
     useReducer(reducer, {
@@ -72,11 +72,11 @@ function ProductEdit({ params }) {
   const classes = useStyles();
   const { userInfo } = state;
   const initialValue = [
-    
+
     { key: 0, value: " --- Select a State ---" }];
-    
-  const [instructorValue, setinstructorValue] = useState(initialValue);
-  
+
+  const [courseValue, setCourseValue] = useState(initialValue);
+
   useEffect(() => {
     if (!userInfo) {
       return router.push('/login');
@@ -84,42 +84,38 @@ function ProductEdit({ params }) {
       const fetchData = async () => {
         try {
           dispatch({ type: 'FETCH_REQUEST' });
-          const { data } = await axios.get(`/api/admin/products/${productId}`, {
+          const { data } = await axios.get(`/api/admin/lectures/${lectureId}`, {
             headers: { authorization: `Bearer ${userInfo.token}` },
           });
-          if(userInfo.isAdmin)
-        {
-          dispatch({ type: 'FETCH_REQUEST' });
-          const { data } = await axios.get(`/api/admin/teachers`, {
-            headers: { authorization: `Bearer ${userInfo.token}` },
-          });
+
           console.log(data);
+          if (userInfo.isAdmin) {
+            dispatch({ type: 'FETCH_REQUEST' });
+            const data1 = await axios.get(`/api/admin/products`, {
+              headers: { authorization: `Bearer ${userInfo.token}` },
+            });
+            console.log(data1);
+            dispatch({ type: 'FETCH_SUCCESS' });
+            data1.data.map(x => {
+              initialValue.push({ key: x._id, value: x.name })
+            })
+            setCourseValue(initialValue);
+
+          }
           dispatch({ type: 'FETCH_SUCCESS' });
-          data.map(x=>{
-            initialValue.push({key:x._id,value:x.name})   
-          })
-          setinstructorValue(initialValue);
-           console.log(instructorValue);
-        }
-          dispatch({ type: 'FETCH_SUCCESS' });
-          setValue('name', data.name);
+          setValue('title', data.title);
+          setValue('no', data.no);
           setValue('slug', data.slug);
-          setValue('price', data.price);
-          setValue('image', data.image);
-          setValue('featuredImage', data.featuredImage);
-          setIsFeatured(data.isFeatured);
-          setValue('category', data.category);
-          setValue('brand', data.brand);
-          setValue('countInStock', data.countInStock);
-          setValue('description', data.description);
-          setValue('instructor',data.instructor)  
+          setValue('videoLink', data.videoLink);
+
+          setValue('course', data.course)
         } catch (err) {
           dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
         }
       };
-     
+
       fetchData();
-      
+
       console.log("touchedFields", errors);
     }
   }, []);
@@ -145,35 +141,24 @@ function ProductEdit({ params }) {
   };
 
   const submitHandler = async ({
-    name,
+    title,
     slug,
-    price,
-    category,
-    image,
-    featuredImage,
-    brand,
-    countInStock,
-    description,
-    instructor
+    no,
+    videoLink,
+    course
   }) => {
     console.log("onise submit handler");
     closeSnackbar();
     try {
       dispatch({ type: 'UPDATE_REQUEST' });
       await axios.put(
-        `/api/admin/products/${productId}`,
+        `/api/admin/lectures/${lectureId}`,
         {
-          name,
+          title,
           slug,
-          price,
-          category,
-          image,
-          isFeatured,
-          featuredImage,
-          brand,
-          countInStock,
-          description,
-          instructor
+          no,
+          videoLink,
+          course
         },
         { headers: { authorization: `Bearer ${userInfo.token}` } }
       );
@@ -186,10 +171,10 @@ function ProductEdit({ params }) {
     }
   };
 
-  const [isFeatured, setIsFeatured] = useState(false);
+
 
   return (
-    <Layout title={`Edit Course ${productId}`}>
+    <Layout title={`Edit Course ${lectureId}`}>
       <Grid container spacing={1}>
         <Grid item md={3} xs={12}>
           <Card className={classes.section}>
@@ -205,7 +190,7 @@ function ProductEdit({ params }) {
                 </ListItem>
               </NextLink>
               <NextLink href="/admin/products" passHref>
-                <ListItem selected  button component="a">
+                <ListItem button component="a">
                   <ListItemText primary="Courses"></ListItemText>
                 </ListItem>
               </NextLink>
@@ -220,7 +205,7 @@ function ProductEdit({ params }) {
                 </ListItem>
               </NextLink>
               <NextLink href="/admin/alllectures" passHref>
-                <ListItem button component="a">
+                <ListItem selected button component="a">
                   <ListItemText primary="All Lectures"></ListItemText>
                 </ListItem>
               </NextLink>
@@ -232,7 +217,7 @@ function ProductEdit({ params }) {
             <List>
               <ListItem>
                 <Typography component="h1" variant="h1">
-                  Edit Course {productId}
+                  Edit Lecture {lectureId}
                 </Typography>
               </ListItem>
               <ListItem>
@@ -249,7 +234,7 @@ function ProductEdit({ params }) {
                   <List>
                     <ListItem>
                       <Controller
-                        name="name"
+                        name="title"
                         control={control}
                         defaultValue=""
                         rules={{
@@ -259,15 +244,16 @@ function ProductEdit({ params }) {
                           <TextField
                             variant="outlined"
                             fullWidth
-                            id="name"
-                            label="Course Name"
-                            error={Boolean(errors.name)}
-                            helperText={errors.name ? 'Name is required' : ''}
+                            id="title"
+                            label="Course title"
+                            error={Boolean(errors.title)}
+                            helperText={errors.title ? 'title is required' : ''}
                             {...field}
                           ></TextField>
                         )}
                       ></Controller>
                     </ListItem>
+
                     <ListItem>
                       <Controller
                         name="slug"
@@ -289,9 +275,10 @@ function ProductEdit({ params }) {
                         )}
                       ></Controller>
                     </ListItem>
+
                     <ListItem>
                       <Controller
-                        name="price"
+                        name="videoLink"
                         control={control}
                         defaultValue=""
                         rules={{
@@ -301,31 +288,10 @@ function ProductEdit({ params }) {
                           <TextField
                             variant="outlined"
                             fullWidth
-                            id="price"
-                            label="Price"
-                            error={Boolean(errors.price)}
-                            helperText={errors.price ? 'Price is required' : ''}
-                            {...field}
-                          ></TextField>
-                        )}
-                      ></Controller>
-                    </ListItem>
-                    <ListItem>
-                      <Controller
-                        name="image"
-                        control={control}
-                        defaultValue=""
-                        rules={{
-                          required: true,
-                        }}
-                        render={({ field }) => (
-                          <TextField
-                            variant="outlined"
-                            fullWidth
-                            id="image"
-                            label="Image"
-                            error={Boolean(errors.image)}
-                            helperText={errors.image ? 'Image is required' : ''}
+                            id="videoLink"
+                            label="videoLink"
+                            error={Boolean(errors.videoLink)}
+                            helperText={errors.videoLink ? 'videoLink is required' : ''}
                             {...field}
                           ></TextField>
                         )}
@@ -333,195 +299,59 @@ function ProductEdit({ params }) {
                     </ListItem>
                     <ListItem>
                       <Button variant="contained" component="label">
-                        Upload File
+                        Upload Video
                         <input type="file" onChange={uploadHandler} hidden />
                       </Button>
                       {loadingUpload && <CircularProgress />}
                     </ListItem>
-                    <ListItem>
-                      <FormControlLabel
-                        label="Is Featured"
-                        control={
-                          <Checkbox
-                            onClick={(e) => setIsFeatured(e.target.checked)}
-                            checked={isFeatured}
-                            name="isFeatured"
-                          />
-                        }
-                      ></FormControlLabel>
-                    </ListItem>
+
+
+
+
+
+
+
                     <ListItem>
                       <Controller
-                        name="featuredImage"
+                        name="course"
                         control={control}
                         defaultValue=""
                         rules={{
                           required: true,
+                          minLength: 2,
                         }}
                         render={({ field }) => (
                           <TextField
                             variant="outlined"
                             fullWidth
-                            id="featuredImage"
-                            label="Featured Image"
-                            error={Boolean(errors.image)}
+                            id="course"
+                            select
+                            label="course"
+                            inputProps={{ type: 'course' }}
+                            error={Boolean(errors.instructor)}
                             helperText={
-                              errors.image ? 'Featured Image is required' : ''
-                            }
-                            {...field}
-                          ></TextField>
-                        )}
-                      ></Controller>
-                    </ListItem>
-                    <ListItem>
-                      <Button variant="contained" component="label">
-                        Upload File
-                        <input
-                          type="file"
-                          onChange={(e) => uploadHandler(e, 'featuredImage')}
-                          hidden
-                        />
-                      </Button>
-                      {loadingUpload && <CircularProgress />}
-                    </ListItem>
-                    <ListItem>
-                      <Controller
-                        name="category"
-                        control={control}
-                        defaultValue=""
-                        rules={{
-                          required: true,
-                        }}
-                        render={({ field }) => (
-                          <TextField
-                            variant="outlined"
-                            fullWidth
-                            id="category"
-                            label="Category"
-                            error={Boolean(errors.category)}
-                            helperText={
-                              errors.category ? 'Category is required' : ''
-                            }
-                            {...field}
-                          ></TextField>
-                        )}
-                      ></Controller>
-                    </ListItem>
-                    <ListItem>
-                      <Controller
-                        name="brand"
-                        control={control}
-                        defaultValue=""
-                        rules={{
-                          required: true,
-                        }}
-                        render={({ field }) => (
-                          <TextField
-                            variant="outlined"
-                            fullWidth
-                            id="brand"
-                            label="Course Title"
-                            error={Boolean(errors.brand)}
-                            helperText={errors.brand ? 'Brand is required' : ''}
-                            {...field}
-                          ></TextField>
-                        )}
-                      ></Controller>
-                    </ListItem>
-                    <ListItem>
-                      <Controller
-                        name="countInStock"
-                        control={control}
-                        defaultValue=""
-                        rules={{
-                          required: true,
-                        }}
-                        render={({ field }) => (
-                          <TextField
-                            variant="outlined"
-                            fullWidth
-                            id="countInStock"
-                            label="No of Students Allowed"
-                            error={Boolean(errors.countInStock)}
-                            helperText={
-                              errors.countInStock
-                                ? 'Count in stock is required'
+                              errors.course
+                                ? errors.course.type === 'minLength'
+                                  ? 'course length is more than 1'
+                                  : 'course   is required'
                                 : ''
                             }
                             {...field}
-                          ></TextField>
+
+                          >
+                            {
+                              courseValue[0] ?
+
+                                courseValue.map((ack) => (
+                                  <MenuItem key={ack.key} value={ack.key}>
+                                    {ack.value}
+                                  </MenuItem>
+                                )) : ""}
+
+                          </TextField>
                         )}
                       ></Controller>
                     </ListItem>
-                    <ListItem>
-                      <Controller
-                        name="description"
-                        control={control}
-                        defaultValue=""
-                        rules={{
-                          required: true,
-                        }}
-                        render={({ field }) => (
-                          <TextField
-                            variant="outlined"
-                            fullWidth
-                            multiline
-                            id="description"
-                            label="Description"
-                            error={Boolean(errors.description)}
-                            helperText={
-                              errors.description
-                                ? 'Description is required'
-                                : ''
-                            }
-                            {...field}
-                          ></TextField>
-                        )}
-                      ></Controller>
-                    </ListItem>
-                    <ListItem>
-            <Controller
-              name="instructor"
-              control={control}
-              defaultValue=""
-              rules={{
-                required: true,
-                minLength: 2,
-              }}
-              render={({ field }) => (
-                <TextField
-                  variant="outlined"
-                  fullWidth
-                  id="instructor"
-                  select
-                  label="instructor"
-                  inputProps={{ type: 'instructor' }}
-                  error={Boolean(errors.instructor)}
-                  helperText={
-                    errors.instructor
-                      ? errors.instructor.type === 'minLength'
-                        ? 'instructor length is more than 1'
-                        : 'instructor   is required'
-                      : ''
-                  }
-                  {...field}
-
-                >
-                   {
-                   instructorValue[0] ?
-                   
-                   instructorValue.map((ack) => (
-                <MenuItem key={ack.key} value={ack.key}>
-                  {ack.value}
-                </MenuItem>
-              )):""}
-                  {/* <MenuItem value={"student"}>Student</MenuItem>
-                  <MenuItem value={"institution"}>Institution</MenuItem> */}
-
-                </TextField>
-              )}
-            ></Controller>
-          </ListItem>
                     <ListItem>
                       <Button
                         variant="contained"

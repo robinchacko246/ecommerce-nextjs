@@ -126,6 +126,7 @@ export default function Register() {
                 >
                   <MenuItem value={"student"}>Student</MenuItem>
                   <MenuItem value={"institution"}>Institution</MenuItem>
+                  <MenuItem value={"teacher"}>Teacher</MenuItem>
 
                 </TextField>
               )}

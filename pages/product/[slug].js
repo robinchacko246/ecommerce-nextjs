@@ -11,23 +11,30 @@ import {
   Button,
   TextField,
   CircularProgress,
+  MenuItem, Popper, Grow, Paper, ClickAwayListener, MenuList
 } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
 import Layout from '../../components/Layout';
 import useStyles from '../../utils/styles';
 import Product from '../../models/Product';
+import Lecture from '../../models/Lecture';
 import db from '../../utils/db';
 import axios from 'axios';
 import { Store } from '../../utils/Store';
 import { getError } from '../../utils/error';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
+// import ImageGallery from 'react-image-gallery';
+// import ReactPlayer from 'react-player'
+import "react-image-gallery/styles/css/image-gallery.css";
 
 export default function ProductScreen(props) {
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
   const { userInfo } = state;
   const { product } = props;
+  const { lectures } = props;
+  console.log(lectures);
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -35,7 +42,48 @@ export default function ProductScreen(props) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
+  //test
+  const images = [
+  ]
 
+  const lecturesForButton=[];
+
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef(null);
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  function handleListKeyDown(event) {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      setOpen(false);
+    } else if (event.key === 'Escape') {
+      setOpen(false);
+    }
+  }
+
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = React.useRef(open);
+
+  lectures.map(x => {
+    lecturesForButton.push({id:x._id,title:x.title})
+    images.push({
+      
+      original: x.videoLink,
+      thumbnail: 'https://res.cloudinary.com/djl4pepq7/image/upload/v1643093428/rthwyivy0vvloapihul7.jpg',
+    })
+  })
+  //test
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -69,7 +117,12 @@ export default function ProductScreen(props) {
   };
   useEffect(() => {
     fetchReviews();
-  }, []);
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current.focus();
+    }
+
+    prevOpen.current = open;
+  }, [open]);
 
   if (!product) {
     return <div>Product Not Found</div>;
@@ -79,9 +132,23 @@ export default function ProductScreen(props) {
     const quantity = existItem ? existItem.quantity + 1 : 1;
     const { data } = await axios.get(`/api/products/${product._id}`);
     if (data.countInStock < quantity) {
-      window.alert('Sorry. Product is out of stock');
+      window.alert('Sorry. Maximum Number of Students Reached');
       return;
     }
+    dispatch({ type: 'CREATE_REQUEST' });
+    console.log(userInfo);
+    await axios.post(
+      `/api/enrollments`,
+      {user:userInfo._id,course:userInfo._id},
+      {
+        headers: { authorization: `Bearer ${userInfo.token}` },
+      }
+    );
+    dispatch({ type: 'CREATE_SUCCESS' });
+    enqueueSnackbar('Course Enrolled successfully', { variant: 'success' });
+    //call enrollment api here
+
+
     dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity } });
     router.push('/cart');
   };
@@ -126,13 +193,91 @@ export default function ProductScreen(props) {
             </ListItem>
             <ListItem>
               <Typography> Description: {product.description}</Typography>
+
+
+
+              {/* <ImageGallery items={images} /> */}
+
+
+
+
             </ListItem>
+
+
+
+            {/* <ReactPlayer url='https://www.youtube.com/watch?v=wWgIAphfn2U' /> */}
           </List>
+          {/* <ImageGallery items={images} /> */}
+
+          <div>
+           
+            <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  ref={anchorRef}
+                  id="composition-button"
+                  aria-controls={open ? 'composition-menu' : undefined}
+                  aria-expanded={open ? 'true' : undefined}
+                  aria-haspopup="true"
+                  onClick={handleToggle}
+                >
+                 Lecture Videos
+                </Button>
+            <Popper
+              open={open}
+              anchorEl={anchorRef.current}
+              role={undefined}
+              placement="bottom-start"
+              transition
+              disablePortal
+            >
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  style={{
+                    transformOrigin:
+                      placement === 'bottom-start' ? 'left top' : 'left bottom',
+                  }}
+                >
+                  <Paper>
+                    <ClickAwayListener onClickAway={handleClose}>
+                      <MenuList
+                        autoFocusItem={open}
+                        id="composition-menu"
+                        aria-labelledby="composition-button"
+                        onKeyDown={handleListKeyDown}
+                      >
+
+                        {/* {lecturesForButton.map(x=>
+                          {
+                            
+                            <MenuItem onClick={handleClose}>{x.title}</MenuItem>
+                          })} */}
+                          {lecturesForButton.map((lecture) => (
+                       <NextLink href={`/lecture/${lecture.id}`} passHref key={lecture.id}>
+                         
+                         <MenuItem onClick={handleClose} >{lecture.title}</MenuItem>
+                         
+                         </NextLink>
+                       ))}
+                     
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
+          </div>
         </Grid>
+
+
+
+
         <Grid item md={3} xs={12}>
           <Card>
             <List>
-              <ListItem>
+              {/* <ListItem>
                 <Grid container>
                   <Grid item xs={6}>
                     <Typography>Price</Typography>
@@ -141,15 +286,15 @@ export default function ProductScreen(props) {
                     <Typography>${product.price}</Typography>
                   </Grid>
                 </Grid>
-              </ListItem>
+              </ListItem> */}
               <ListItem>
                 <Grid container>
                   <Grid item xs={6}>
-                    <Typography>Status</Typography>
+                    <Typography>Current Students :</Typography>
                   </Grid>
                   <Grid item xs={6}>
                     <Typography>
-                      {product.countInStock > 0 ? 'In stock' : 'Unavailable'}
+                      {product.countInStock-50}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -161,17 +306,19 @@ export default function ProductScreen(props) {
                   color="primary"
                   onClick={addToCartHandler}
                 >
-                  Enroll Course
+                    Enroll Course 
                 </Button>
               </ListItem>
             </List>
           </Card>
         </Grid>
+
       </Grid>
       <List>
         <ListItem>
+
           <Typography name="reviews" id="reviews" variant="h2">
-            Customer Reviews
+          Students Reviews
           </Typography>
         </ListItem>
         {reviews.length === 0 && <ListItem>No review</ListItem>}
@@ -251,10 +398,12 @@ export async function getServerSideProps(context) {
 
   await db.connect();
   const product = await Product.findOne({ slug }, '-reviews').lean();
+  const lectures = await Lecture.find({ course: product._id }).lean();
   await db.disconnect();
   return {
     props: {
       product: db.convertDocToObj(product),
+      lectures: db.convertDocToObj(lectures)
     },
   };
 }

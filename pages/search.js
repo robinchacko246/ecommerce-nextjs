@@ -201,7 +201,7 @@ export default function Search(props) {
                 <MenuItem value="featured">Featured</MenuItem>
                 <MenuItem value="lowest">Price: Low to High</MenuItem>
                 <MenuItem value="highest">Price: High to Low</MenuItem>
-                <MenuItem value="toprated">Customer Reviews</MenuItem>
+                <MenuItem value="toprated">Students Reviews</MenuItem>
                 <MenuItem value="newest">Newest Arrivals</MenuItem>
               </Select>
             </Grid>

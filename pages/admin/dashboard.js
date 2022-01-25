@@ -94,6 +94,11 @@ function AdminDashboard() {
                   <ListItemText primary="Institutions"></ListItemText>
                 </ListItem>
               </NextLink>
+              <NextLink href="/admin/alllectures" passHref>
+                <ListItem button component="a">
+                  <ListItemText primary="All Lectures"></ListItemText>
+                </ListItem>
+              </NextLink>
             </List>
           </Card>
         </Grid>

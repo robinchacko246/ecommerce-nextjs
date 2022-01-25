@@ -11,7 +11,7 @@ import {
   ThemeProvider,
   CssBaseline,
   Switch,
-  Badge,
+  // Badge,
   Button,
   Menu,
   MenuItem,
@@ -40,7 +40,8 @@ import { useEffect } from 'react';
 export default function Layout({ title, description, children }) {
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
-  const { darkMode, cart, userInfo } = state;
+  const { darkMode, userInfo } = state;
+//  const { darkMode, cart, userInfo } = state;//old data
   const theme = createMuiTheme({
     typography: {
       h1: {
@@ -210,7 +211,7 @@ export default function Layout({ title, description, children }) {
                 checked={darkMode}
                 onChange={darkModeChangeHandler}
               ></Switch>
-              <NextLink href="/cart" passHref>
+              {/* <NextLink href="/cart" passHref>
                 <Link>
                   <Typography component="span">
                     {cart.cartItems.length > 0 ? (
@@ -225,7 +226,7 @@ export default function Layout({ title, description, children }) {
                     )}
                   </Typography>
                 </Link>
-              </NextLink>
+              </NextLink> */}
               {userInfo ? (
                 <>
                   <Button
@@ -253,7 +254,7 @@ export default function Layout({ title, description, children }) {
                         loginMenuCloseHandler(e, '/order-history')
                       }
                     >
-                      Order Hisotry
+                     My Learnings
                     </MenuItem>
                     {userInfo.isAdmin && (
                       <MenuItem

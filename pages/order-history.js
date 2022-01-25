@@ -90,7 +90,7 @@ function OrderHistory() {
             <List>
               <ListItem>
                 <Typography component="h1" variant="h1">
-                  Order History
+                  My Learnings
                 </Typography>
               </ListItem>
               <ListItem>
